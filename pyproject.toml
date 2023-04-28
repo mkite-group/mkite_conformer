@@ -9,6 +9,11 @@ description = "plugin to deal with conformer generation in mkite"
 authors = [{name = "Daniel Schwalbe-Koda", email = "dskoda@llnl.gov"}]
 readme = "README.md"
 requires-python = ">=3.8"
+keywords = ["workflow", "materials-science", "chemistry"]
+dependencies = [
+    "mkite_core",
+    "rdkit",
+]
 
 [tool.setuptools]
 packages = ["mkite_conformer"]
