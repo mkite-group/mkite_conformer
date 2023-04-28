@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mkite_conformer"
+version = "0.1.0"
+description = "plugin to deal with conformer generation in mkite"
+authors = [{name = "Daniel Schwalbe-Koda", email = "dskoda@llnl.gov"}]
+readme = "README.md"
+requires-python = ">=3.8"
+
+[tool.setuptools]
+packages = ["mkite_conformer"]
+
+[project.entry-points."mkite.recipes"]
+"conformer.generation" = "mkite_conformer.recipes.rdkit:ConformerGenerationRecipe"
