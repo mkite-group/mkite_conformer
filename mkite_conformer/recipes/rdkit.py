@@ -1,19 +1,21 @@
 import os
-import time
 import random
-from pydantic import Field
+import time
 from typing import List
 
-import rdkit.Chem.AllChem as Chem
-from mkite_core.recipes import BaseOptions, PythonRecipe, EnvSettings
-from mkite_core.models import (
-    NodeResults,
-    JobResults,
-    ConformerInfo,
-    EnergyForcesInfo,
-)
+from mkite_conformer.runners.rdkit import ConformerGenerator
+from mkite_conformer.runners.rdkit import ForceFields
 from mkite_core.external.rdkit import RdkitInterface
-from mkite_conformer.runners.rdkit import ForceFields, ConformerGenerator
+from mkite_core.models import ConformerInfo
+from mkite_core.models import EnergyForcesInfo
+from mkite_core.models import JobResults
+from mkite_core.models import NodeResults
+from mkite_core.recipes import BaseOptions
+from mkite_core.recipes import EnvSettings
+from mkite_core.recipes import PythonRecipe
+from pydantic import Field
+
+import rdkit.Chem.AllChem as Chem
 
 
 class ConformerGenerationOptions(BaseOptions):
@@ -60,18 +62,15 @@ class ConformerGenerationRecipe(PythonRecipe):
     def get_inputs(self) -> Chem.Mol:
         inputs = super().get_inputs()
         smiles = inputs[0]["smiles"]
-        mol = Chem.MolFromSmiles(smiles)
-        mol = Chem.AddHs(mol, addCoords=True)
-
-        return mol
+        return smiles
 
     def run(self):
         start_time = time.process_time()
 
-        mol = self.get_inputs()
+        smiles = self.get_inputs()
         opts = self.get_options()
 
-        confgen = ConformerGenerator(mol, **opts)
+        confgen = ConformerGenerator(smiles, **opts)
         newmol, energies = confgen.run()
 
         end_time = time.process_time()
@@ -79,7 +78,9 @@ class ConformerGenerationRecipe(PythonRecipe):
 
         return self.postprocess(newmol, energies, duration=duration)
 
-    def postprocess(self, mol: Chem.Mol, energies: List[float], duration: float) -> JobResults:
+    def postprocess(
+        self, mol: Chem.Mol, energies: List[float], duration: float
+    ) -> JobResults:
         interface = RdkitInterface(mol)
         nodes = []
         for conf, e in zip(interface.conformer_info, energies):
@@ -101,7 +102,10 @@ class ConformerGenerationRecipe(PythonRecipe):
         return jobres
 
     def create_chemnode(self, conformer_info: ConformerInfo) -> dict:
-        conformer_info.mol = {"inchikey": conformer_info.mol.inchikey, "smiles": conformer_info.mol.smiles}
+        conformer_info.mol = {
+            "inchikey": conformer_info.mol.inchikey,
+            "smiles": conformer_info.mol.smiles,
+        }
         return conformer_info.as_dict()
 
     def create_calcnode(self, energy: float) -> List[dict]:
