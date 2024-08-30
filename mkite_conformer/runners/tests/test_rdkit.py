@@ -12,7 +12,7 @@ from mkite_conformer.runners.rdkit import ConformerGenerator
 class TestConformerGenerator(ut.TestCase):
     def setUp(self):
         self.smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"
-        self.recipe = ConformerGenerator.from_smiles(
+        self.recipe = ConformerGenerator(
             self.smiles,
             random_seed=142857,
         )
@@ -58,7 +58,7 @@ class TestSeveralSmiles(ut.TestCase):
         smiles = ["[H]", "[C]", "[C-]#[O+]"]
 
         for smi in smiles:
-            recipe = ConformerGenerator.from_smiles(
+            recipe = ConformerGenerator(
                 smi,
                 random_seed=142857,
             )

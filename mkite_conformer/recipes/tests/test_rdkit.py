@@ -35,8 +35,8 @@ class TestConformerGeneration(ut.TestCase):
         return Chem.MolFromSmiles(EXAMPLE_MOL["smiles"])
 
     def test_get_inputs(self):
-        mol = self.recipe.get_inputs()
-        self.assertIsInstance(mol, Chem.Mol)
+        smi = self.recipe.get_inputs()
+        self.assertIsInstance(smi, str)
 
     @run_in_tempdir
     def test_run(self):
