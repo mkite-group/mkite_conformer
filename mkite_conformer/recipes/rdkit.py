@@ -3,16 +3,10 @@ import random
 import time
 from typing import List
 
-from mkite_conformer.runners.rdkit import ConformerGenerator
-from mkite_conformer.runners.rdkit import ForceFields
+from mkite_conformer.runners.rdkit import ConformerGenerator, ForceFields
 from mkite_core.external.rdkit import RdkitInterface
-from mkite_core.models import ConformerInfo
-from mkite_core.models import EnergyForcesInfo
-from mkite_core.models import JobResults
-from mkite_core.models import NodeResults
-from mkite_core.recipes import BaseOptions
-from mkite_core.recipes import EnvSettings
-from mkite_core.recipes import PythonRecipe
+from mkite_core.models import ConformerInfo, EnergyForcesInfo, JobResults, NodeResults
+from mkite_core.recipes import BaseOptions, EnvSettings, PythonRecipe
 from pydantic import Field
 
 import rdkit.Chem.AllChem as Chem
@@ -59,7 +53,7 @@ class ConformerGenerationRecipe(PythonRecipe):
     SETTINGS_CLS = EnvSettings
     OPTIONS_CLS = ConformerGenerationOptions
 
-    def get_inputs(self) -> Chem.Mol:
+    def get_inputs(self) -> str:
         inputs = super().get_inputs()
         smiles = inputs[0]["smiles"]
         return smiles
