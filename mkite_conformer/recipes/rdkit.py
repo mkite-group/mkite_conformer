@@ -5,7 +5,7 @@ from typing import List
 
 from mkite_conformer.runners.rdkit import ConformerGenerator, ForceFields
 from mkite_core.external.rdkit import RdkitInterface
-from mkite_core.models import ConformerInfo, EnergyForcesInfo, JobResults, NodeResults
+from mkite_core.models import ConformerInfo, CalcInfo, JobResults, NodeResults
 from mkite_core.recipes import BaseOptions, EnvSettings, PythonRecipe
 from pydantic import Field
 
@@ -103,4 +103,7 @@ class ConformerGenerationRecipe(PythonRecipe):
         return conformer_info.as_dict()
 
     def create_calcnode(self, energy: float) -> List[dict]:
-        return EnergyForcesInfo(energy=energy).as_dict()
+        data = {"energy": energy}
+        info = CalcInfo(data=data)
+        info.set_calctype("energy")
+        return info.as_dict()
