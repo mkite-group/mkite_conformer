@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mkite_conformer"
-version = "24.09.05"
+version = "25.11.03"
 description = "plugin to deal with conformer generation in mkite"
 authors = [{name = "Daniel Schwalbe-Koda", email = "dskoda@ucla.edu"}]
 readme = "README.md"
